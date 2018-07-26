@@ -1,15 +1,8 @@
-// Print battery voltage
-// to 16x2 LCD via I2C
-/*
-  One end goes to Battery - and also to Arduino GND
-  The other goes to Battery + and also to Arduino A0
-*/
-
 #include <Wire.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 
-#define I2C_ADDR    0x27 //Add your address here.  Find it from I2C Scanner
+#define I2C_ADDR    0x27 
 #define BACKLIGHT_PIN     3
 #define En_pin  2
 #define Rw_pin  1
@@ -39,10 +32,10 @@ void loop()
  
  void printVolts()
 {
-  int sensorValue = analogRead(A0); //read the A0 pin value
-  float voltage = (sensorValue / 1023.00) * 5; //calculate the ratio.
+  int sensorValue = analogRead(A0);
+  float voltage = (sensorValue / 1023.00) * 5;
   lcd.setCursor(0,0);
   lcd.print("voltage = ");
-  lcd.print(voltage); //print the voltage to LCD
+  lcd.print(voltage);
   lcd.print(" V");
 }
