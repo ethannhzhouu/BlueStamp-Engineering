@@ -3,7 +3,7 @@
 #include <LCD.h> . 
 #include <LiquidCrystal_I2C.h>
 
-#define I2C_ADDR    0x27 //Add your address here.  Find it from I2C Scanner
+#define I2C_ADDR    0x27 
 #define BACKLIGHT_PIN     3
 #define En_pin  2
 #define Rw_pin  1
@@ -15,37 +15,37 @@
 #define led_pin 13
 LiquidCrystal_I2C lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
 
-Servo servo;   // Create a servo object to control the servo
-int eLDRPin = A0; // Assign pins to the LDR's
+Servo servo;  
+int eLDRPin = A0; 
 int wLDRPin = A1;
-int eastLDR = 0; //Create variables to store to LDR readings
+int eastLDR = 0; 
 int westLDR = 0;
-int difference = 0; //Create a variable to compare the two LDR's
-int error = 10;  // Variable for is there is a noticable difference between the tow LDR's
-int servoSet = 130; //Variable for position of servo - will be different for each device
+int difference = 0;
+int error = 10; 
+int servoSet = 130; 
 void setup() {
- servo.attach(9);   //attaches the servo object to PWM pin 9
+ servo.attach(9);  
  Serial.begin(9600);
- lcd.begin (16,2); //My LCD was 16x2
+ lcd.begin (16,2); 
   lcd.setBacklightPin(BACKLIGHT_PIN,POSITIVE);
   lcd.setBacklight(HIGH);
-  lcd.home (); // go home
+  lcd.home ();
   
   pinMode(led_pin, OUTPUT);
   digitalWrite(led_pin, LOW);
 }
 void loop() {
- eastLDR = analogRead(eLDRPin); //Read the LDR values
+ eastLDR = analogRead(eLDRPin); 
  westLDR = analogRead(wLDRPin);
- if (eastLDR < 400 && westLDR < 400) {  //Check to see if there is low light on both LDR's
-   while (servoSet <=140 &&servoSet >=30) {     // if so, send panels back to east for the sunrise
+ if (eastLDR < 400 && westLDR < 400) { 
+   while (servoSet <=140 &&servoSet >=30) {     
      servoSet ++;
      servo.write(servoSet);
      delay(100);
    }
  }
- difference = eastLDR - westLDR ; //Check the difference 
- if (difference > 20) {          //Send the panel towards the LDR with a higher reading
+ difference = eastLDR - westLDR ; 
+ if (difference > 20) {          
    if (servoSet <= 140) {
      servoSet ++;
      servo.write(servoSet);
@@ -56,21 +56,21 @@ void loop() {
      servo.write(servoSet);
    }
  }
- Serial.print(eastLDR);      //Serial monitor can be useful for debugging/setting up
- Serial.print("   -   ");    //Use it to see if your LDR's are noticeably different when
- Serial.print(westLDR);      //They have equal light shining on them, if so, correct with the error value
+ Serial.print(eastLDR);      
+ Serial.print("   -   "); 
+ Serial.print(westLDR);      
  Serial.print("   -   ");
  Serial.print(difference);   
  Serial.print("   -   ");
- Serial.print(servoSet);     //Fine tune the servo settings, to maximise swing available
+ Serial.print(servoSet);     
  Serial.print("   -   ");
  Serial.println(".");
  delay(100);
    int sensorValue = analogRead(A2);
-  float voltage = ((sensorValue / 1023.00) * 5) - 3.2; //calculate the ratio.
-  int battpercent = (voltage / 1.0) * 100;
+  float voltage = ((sensorValue / 1023.00) * 5) - 3.0; 
+  int battpercent = (voltage / 1.2) * 100;
   lcd.setCursor(0,0);
   lcd.print("Charge LV = ");
-  lcd.print(battpercent); //print the voltage to LCD
+  lcd.print(battpercent); 
   lcd.print("%");
   }
